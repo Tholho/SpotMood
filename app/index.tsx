@@ -1,16 +1,29 @@
-import { Text, View, StyleSheet, Button, Pressable } from "react-native";
-import { Link } from "expo-router";
-import { useStorageState } from "./storage/secureStorage";
+import { Text, View, StyleSheet, Pressable } from "react-native";
+import { useRouter } from "expo-router";
 import { useEffect } from "react";
 import { useSession } from "./context/AuthContext";
-//import { useNavigation } from "@react-navigation/native";
 
 export default function Index() {
-  const { signIn } = useSession();
-  //const navigation = useNavigation();
-  console.log("Index entry in app/index.tsx");
-  //const [[loading, value], setValue] = useStorageState("session");
+  const { signIn, session, isLoading } = useSession();
+  const router = useRouter();
+  //verify token validity and navigate to identified pages, mock atm
+  useEffect(() => {
+    if (isLoading) return;
+    let token = "";
+    if (typeof session === "string" && session) {
+      token = session;
+    } else if (typeof session === "object") {
+      if (session?.accessToken) {
+        token = session.accessToken;
+      }
+    }
+    if (token) {
+      console.log(token);
+      router.replace("/home");
+    }
+  }, [session, isLoading]);
 
+  console.log("Index entry in app/index.tsx");
   return (
     <View style={styles.container}>
       <Text style={styles.text}>APP/INDEX.TSX</Text>
@@ -19,13 +32,15 @@ export default function Index() {
       </Text>
       <Text style={styles.text}>Token == TBD</Text>
 
-      <Link style={styles.button} href="/home" asChild>
-        <Pressable onPress={() => signIn()}>
-          <Text style={styles.buttonText}>
-            Link to APP/(tabs)/INDEX.TSX (login pretends)
-          </Text>
-        </Pressable>
-      </Link>
+      <Pressable style={styles.button} onPress={() => signIn()}>
+        <Text style={styles.buttonText}>
+          Link to APP/(tabs)/INDEX.TSX (login pretends)
+        </Text>
+      </Pressable>
+
+      {
+        //<Text style={styles.text}>session.accessToken == {token}</Text>
+      }
     </View>
   );
 }

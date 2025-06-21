@@ -1,16 +1,20 @@
 import { Tabs, useRouter } from "expo-router";
-import { useContext, useEffect } from "react";
+import { useEffect } from "react";
 import { useSession } from "../context/AuthContext";
 
-export default function RootLayout() {
+export default function LoggedLayout() {
   const router = useRouter();
-  const session = useSession();
+  const { session, isLoading } = useSession();
+
   useEffect(() => {
-    if (!session) {
-      router.navigate("/");
+    if (!isLoading) {
+      if (!session || (typeof session === "object" && !session?.accessToken)) {
+        router.replace("/");
+      }
     }
-  });
-  console.log("RootLayout entry in app/(tabs)/_layout.tsx");
+  }, [session, isLoading]);
+
+  console.log("LoggedLayout entry in app/(tabs)/_layout.tsx");
   return (
     <Tabs>
       <Tabs.Screen name="home" options={{ title: "Home" }} />

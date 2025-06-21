@@ -1,19 +1,20 @@
-import { Text, View, StyleSheet, Button, Pressable } from "react-native";
-import { Link, Redirect, useRouter } from "expo-router";
-import { useStorageState } from "../storage/secureStorage";
-import { AuthTokens, useSession } from "../context/AuthContext";
+import { Text, View, StyleSheet, Pressable } from "react-native";
+import { Link, useRouter } from "expo-router";
+import { useSession } from "../context/AuthContext";
 import { useEffect } from "react";
-//import { useEffect } from "react";
-//import { useNavigation } from "@react-navigation/native";
 
 export default function Index() {
-  console.log("Index entry in app/(tabs)/index.tsx");
+  console.log("Home entry in app/(tabs)/home.tsx");
   const router = useRouter();
-  //const navigation = useNavigation();
-  const [[loading, value], setValue] = useStorageState<AuthTokens | null>(
-    "session",
-  );
-  const { session } = useSession();
+  const { session, signOut, isLoading } = useSession();
+  useEffect(() => {
+    if (isLoading) return;
+    if (session == null) {
+      //Necessary to defer because Root component might not be mounted soon enough
+      router.replace("/");
+    }
+  }, [session, isLoading]);
+
   let token = "";
   if (typeof session === "string") {
     token = session;
@@ -22,16 +23,6 @@ export default function Index() {
       token = session.accessToken;
     }
   }
-  /*if (!session) {
-    console.log("test");
-    router.navigate("/");
-  }
-  console.log(session);
-  console.log(value);
-  /*if (!value) {
-    console.log("test");
-    router.navigate("/");
-    }*/
   return (
     <View style={styles.container}>
       <Text style={styles.text}>APP/(TABS)/INDEX.TSX</Text>
@@ -43,15 +34,14 @@ export default function Index() {
         <Text
           style={styles.buttonText}
           onPress={() => {
-            setValue(null);
-            router.navigate("/");
+            signOut();
           }}
         >
           Logout button (Should clear session from storage, redirection logic
           should happen from state/storage
         </Text>
       </Pressable>
-      <Text style={styles.text}>StorageState value == {token}</Text>
+      <Text style={styles.text}>session.accessToken == {token}</Text>
       <Link style={styles.button} href="/about" asChild>
         <Pressable>
           <Text style={styles.buttonText}>Link to APP/(TABS)/ABOUT.TSX</Text>

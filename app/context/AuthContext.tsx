@@ -1,7 +1,7 @@
 import { use, createContext, type PropsWithChildren } from "react";
 import { useStorageState } from "../storage/secureStorage";
 
-type AuthTokens = {
+export type AuthTokens = {
   accessToken: string | null;
   refreshToken: string | null;
   expiresIn: number | null;
@@ -36,21 +36,22 @@ export function useSession() {
 export function SessionProvider({ children }: PropsWithChildren) {
   const [[isLoading, session], setSession] =
     useStorageState<AuthTokens>("session");
-
+  const tokens: AuthTokens = {
+    accessToken: null,
+    refreshToken: null,
+    expiresIn: null,
+  };
   return (
     <AuthContext
       value={{
         signIn: () => {
           // Perform sign-in logic here
-          const tokens: AuthTokens = {
-            accessToken: "LoggedIn",
-            refreshToken: null,
-            expiresIn: null,
-          };
+          tokens.accessToken = "LoggedIn";
           setSession(tokens);
         },
         signOut: () => {
-          setSession(null);
+          tokens.accessToken = null;
+          setSession({ ...tokens, accessToken: null });
         },
         session,
         isLoading,
