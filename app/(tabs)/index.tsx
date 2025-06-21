@@ -1,33 +1,26 @@
 import { Text, View, StyleSheet, Button, Pressable } from "react-native";
 import { Link } from "expo-router";
-import { useStorageState } from "./storage/secureStorage";
-import { useEffect } from "react";
+import { useStorageState } from "../storage/secureStorage";
 //import { useNavigation } from "@react-navigation/native";
 
 export default function Index() {
   //const navigation = useNavigation();
-  console.log("Index entry in app/index.tsx");
   const [[loading, value], setValue] = useStorageState("some-key");
 
-  useEffect(() => {
-    if (!loading && value === null) {
-      setValue("worthSomething");
-    }
-  }, [loading, value]);
+  console.log("Index entry in app/(tabs)/index.tsx");
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>APP/INDEX.TSX</Text>
+      <Text style={styles.text}>APP/(TABS)/INDEX.TSX</Text>
       <Text style={styles.text}>
-        This should display in the absence of OAuth Access Token
+        This should display if OAuth Access Token is valid
       </Text>
       <Text style={styles.text}>Token == TBD</Text>
-
+      <Text style={styles.text}>StorageState value == {value as string}</Text>
       <Link style={styles.button} href="/about" asChild>
         <Pressable>
-          <Text style={styles.buttonText}>Link to APP/ABOUT.TSX</Text>
+          <Text style={styles.buttonText}>Link to APP/(TABS)/ABOUT.TSX</Text>
         </Pressable>
       </Link>
-      <Text style={styles.textWarning}>The button above should NOT work</Text>
     </View>
   );
 }
@@ -45,11 +38,6 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: "#ffffff",
-  },
-  textWarning: {
-    padding: 4,
-    color: "#ffffff",
-    backgroundColor: "#A50B5E",
   },
   button: {
     padding: 10,
