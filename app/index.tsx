@@ -2,18 +2,15 @@ import { Text, View, StyleSheet, Button, Pressable } from "react-native";
 import { Link } from "expo-router";
 import { useStorageState } from "./storage/secureStorage";
 import { useEffect } from "react";
+import { useSession } from "./context/AuthContext";
 //import { useNavigation } from "@react-navigation/native";
 
 export default function Index() {
+  const { signIn } = useSession();
   //const navigation = useNavigation();
   console.log("Index entry in app/index.tsx");
-  const [[loading, value], setValue] = useStorageState("some-key");
+  //const [[loading, value], setValue] = useStorageState("session");
 
-  useEffect(() => {
-    if (!loading && value === null) {
-      setValue("worthSomething");
-    }
-  }, [loading, value]);
   return (
     <View style={styles.container}>
       <Text style={styles.text}>APP/INDEX.TSX</Text>
@@ -22,12 +19,13 @@ export default function Index() {
       </Text>
       <Text style={styles.text}>Token == TBD</Text>
 
-      <Link style={styles.button} href="/about" asChild>
-        <Pressable>
-          <Text style={styles.buttonText}>Link to APP/ABOUT.TSX</Text>
+      <Link style={styles.button} href="/home" asChild>
+        <Pressable onPress={() => signIn()}>
+          <Text style={styles.buttonText}>
+            Link to APP/(tabs)/INDEX.TSX (login pretends)
+          </Text>
         </Pressable>
       </Link>
-      <Text style={styles.textWarning}>The button above should NOT work</Text>
     </View>
   );
 }
