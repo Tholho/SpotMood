@@ -52,8 +52,34 @@ export default function Index() {
       </Pressable>
       <Button
         title="Login"
-        onPress={() => {
-          handleSpotifyLogin(getRedirectURI());
+        onPress={async () => {
+          let codeAndVerify = await handleSpotifyLogin(getRedirectURI());
+          if (!codeAndVerify) return;
+          const body = new URLSearchParams({
+            client_id: "05d1e04eac8145b1aafaca023082c621",
+            grant_type: "authorization_code",
+            code: codeAndVerify.code,
+            redirect_uri: getRedirectURI(),
+            code_verifier: codeAndVerify.verifier,
+          });
+          console.log("sending token request");
+          console.log(body.toString());
+          const res = await fetch("https://accounts.spotify.com/api/token", {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: body.toString(),
+          });
+
+          const tokenData = await res.json();
+          console.log("TOKEN = " + tokenData);
+          if (tokenData.access_token) {
+            setSession({
+              accessToken: tokenData.access_token,
+            });
+            router.replace("/home");
+          } else {
+            router.replace("/+not-found");
+          }
         }}
       />
       {
