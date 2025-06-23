@@ -78,7 +78,7 @@ export default function Index() {
             });
             router.replace("/home");
           } else {
-            router.replace("/+not-found");
+            //router.replace("/+not-found");
           }
         }}
       />

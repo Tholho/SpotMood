@@ -14,15 +14,12 @@ export async function handleSpotifyLogin(redirectUri) {
   console.log(challenge);
   await setVerifier(verifier);
 
-  const hashed = await sha256(verifier);
-  const codeChallenge = base64urlencode(hashed);
-  console.log("CHALLENGE2 =" + codeChallenge);
   const request = new AuthRequest({
     clientId: "05d1e04eac8145b1aafaca023082c621",
     scopes: ["user-read-private"],
     redirectUri: getRedirectURI(),
     responseType: "code",
-    codeChallenge: codeChallenge,
+    codeChallenge: challenge,
     codeChallengeMethod: CodeChallengeMethod.S256,
   });
 
@@ -61,28 +58,4 @@ export async function generateChallenge(verifier) {
   );
   console.log("DIGEST 1 =" + digest);
   return digest.replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
-}
-
-function sha256(plain) {
-  // returns promise ArrayBuffer
-  const encoder = new TextEncoder();
-  const data = encoder.encode(plain);
-  return window.crypto.subtle.digest("SHA-256", data);
-}
-
-function base64urlencode(a) {
-  // Convert the ArrayBuffer to string using Uint8 array.
-  // btoa takes chars from 0-255 and base64 encodes.
-  // Then convert the base64 encoded to base64url encoded.
-  // (replace + with -, replace / with _, trim trailing =)
-  return btoa(String.fromCharCode.apply(null, new Uint8Array(a)))
-    .replace(/\+/g, "-")
-    .replace(/\//g, "_")
-    .replace(/=+$/, "");
-}
-
-async function pkce_challenge_from_verifier(v) {
-  let hashed = await sha256(v);
-  let base64encoded = base64urlencode(hashed);
-  return base64encoded;
 }
