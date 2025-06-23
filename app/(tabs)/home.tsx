@@ -1,7 +1,8 @@
 import { Text, View, StyleSheet, Pressable } from "react-native";
 import { Link, useRouter } from "expo-router";
-import { useSession } from "../context/AuthContext";
+import { useSession } from "../../libs/context/AuthContext";
 import { useEffect } from "react";
+//import MockSpotifyAuth from "../Spotify/mockSpotifyAuth";
 
 export default function Index() {
   console.log("Home entry in app/(tabs)/home.tsx");
@@ -14,7 +15,6 @@ export default function Index() {
       router.replace("/");
     }
   }, [session, isLoading]);
-
   let token = "";
   if (typeof session === "string") {
     token = session;
@@ -34,6 +34,9 @@ export default function Index() {
         <Text
           style={styles.buttonText}
           onPress={() => {
+            console.log(
+              "signout pressed.. need to figure out why app is sometimes unresponsive (this does not always print on press)",
+            );
             signOut();
           }}
         >

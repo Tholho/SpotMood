@@ -3,22 +3,24 @@ import { useStorageState } from "../storage/secureStorage";
 
 export type AuthTokens = {
   accessToken: string | null;
-  refreshToken: string | null;
-  expiresIn: number | null;
+  //  refreshToken: string | null;
+  //  expiresIn: number | null;
 };
 
 const AuthContext = createContext<{
   signIn: () => void;
   signOut: () => void;
+  setSession: (tokens: AuthTokens | null) => void;
   session: AuthTokens | string | null;
   isLoading: boolean;
 }>({
   signIn: () => null,
   signOut: () => null,
+  setSession: () => null,
   session: {
     accessToken: null,
-    refreshToken: null,
-    expiresIn: null,
+    //  refreshToken: null,
+    //  expiresIn: null,
   },
   isLoading: false,
 });
@@ -36,23 +38,12 @@ export function useSession() {
 export function SessionProvider({ children }: PropsWithChildren) {
   const [[isLoading, session], setSession] =
     useStorageState<AuthTokens>("session");
-  const tokens: AuthTokens = {
-    accessToken: null,
-    refreshToken: null,
-    expiresIn: null,
-  };
   return (
     <AuthContext
       value={{
-        signIn: () => {
-          // Perform sign-in logic here
-          tokens.accessToken = "LoggedIn";
-          setSession(tokens);
-        },
-        signOut: () => {
-          tokens.accessToken = null;
-          setSession({ ...tokens, accessToken: null });
-        },
+        signIn: () => {},
+        signOut: () => setSession(null),
+        setSession,
         session,
         isLoading,
       }}

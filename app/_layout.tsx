@@ -1,6 +1,7 @@
 import { Stack } from "expo-router";
-import { SessionProvider } from "./context/AuthContext";
-
+import { SessionProvider } from "../libs/context/AuthContext";
+//import * as WebBrowser from "expo-web-browser";
+//WebBrowser.maybeCompleteAuthSession();
 export default function RootLayout() {
   console.log("RootLayout entry in app/_layout.tsx");
   return (

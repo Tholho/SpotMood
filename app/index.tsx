@@ -1,12 +1,27 @@
-import { Text, View, StyleSheet, Pressable } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  Pressable,
+  Button,
+  Platform,
+} from "react-native";
 import { useRouter } from "expo-router";
-import { useEffect } from "react";
-import { useSession } from "./context/AuthContext";
+import { useSession } from "../libs/context/AuthContext";
+import * as WebBrowser from "expo-web-browser";
+//import SpotifyLogin from "./Spotify/mockSpotifyAuth";
+import { handleSpotifyLogin } from "../libs/Spotify/SpotifyAuth";
+import { makeRedirectUri } from "expo-auth-session";
+import getRedirectURI from "@/libs/platforms/redirectURI";
+
+WebBrowser.maybeCompleteAuthSession();
 
 export default function Index() {
-  const { signIn, session, isLoading } = useSession();
+  const { signIn, session, isLoading, setSession } = useSession();
   const router = useRouter();
+  console.log("SESSION = " + session);
   //verify token validity and navigate to identified pages, mock atm
+  /*
   useEffect(() => {
     if (isLoading) return;
     let token = "";
@@ -22,7 +37,7 @@ export default function Index() {
       router.replace("/home");
     }
   }, [session, isLoading]);
-
+ */
   console.log("Index entry in app/index.tsx");
   return (
     <View style={styles.container}>
@@ -32,12 +47,15 @@ export default function Index() {
       </Text>
       <Text style={styles.text}>Token == TBD</Text>
 
-      <Pressable style={styles.button} onPress={() => signIn()}>
-        <Text style={styles.buttonText}>
-          Link to APP/(tabs)/INDEX.TSX (login pretends)
-        </Text>
+      <Pressable style={styles.button} onPress={() => router.replace("/")}>
+        <Text style={styles.buttonText}>Link to mockSpotifyAuth WIP</Text>
       </Pressable>
-
+      <Button
+        title="Login"
+        onPress={() => {
+          handleSpotifyLogin(getRedirectURI());
+        }}
+      />
       {
         //<Text style={styles.text}>session.accessToken == {token}</Text>
       }
