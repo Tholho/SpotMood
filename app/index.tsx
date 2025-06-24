@@ -4,12 +4,18 @@ import { useSession } from "../libs/context/AuthContext";
 import * as WebBrowser from "expo-web-browser";
 import { handleSpotifyLogin } from "../libs/Spotify/SpotifyAuth";
 import getRedirectURI from "@/libs/platforms/redirectURI";
+import { useEffect } from "react";
+import { Platform } from "react-native";
 
 WebBrowser.maybeCompleteAuthSession();
 
 export default function Index() {
   const { signIn, session, isLoading, setSession } = useSession();
   const router = useRouter();
+  useEffect(() => {
+    if (Platform.OS === "web" && document.location.host != "127.0.0.1:8081")
+      document.location.href = "http://127.0.0.1:8081";
+  });
   console.log("SESSION = " + session);
   console.log("Index entry in app/index.tsx");
   return (
