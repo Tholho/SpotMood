@@ -11,6 +11,7 @@ export async function setVerifier(value: string | null): Promise<void> {
       if (value === null) {
         localStorage.removeItem(KEY);
       } else {
+        console.log("updating verifier:" + value);
         localStorage.setItem(KEY, value);
       }
     } catch (e) {
