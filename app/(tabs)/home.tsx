@@ -10,7 +10,6 @@ export default function Index() {
   useEffect(() => {
     if (isLoading) return;
     if (session == null) {
-      //Necessary to defer because Root component might not be mounted soon enough
       router.replace("/");
     }
   }, [session, isLoading]);

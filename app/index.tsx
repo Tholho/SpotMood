@@ -2,7 +2,6 @@ import { Text, View, StyleSheet, Pressable, Button } from "react-native";
 import { useRouter } from "expo-router";
 import { useSession } from "../libs/context/AuthContext";
 import * as WebBrowser from "expo-web-browser";
-//import SpotifyLogin from "./Spotify/mockSpotifyAuth";
 import { handleSpotifyLogin } from "../libs/Spotify/SpotifyAuth";
 import getRedirectURI from "@/libs/platforms/redirectURI";
 

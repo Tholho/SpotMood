@@ -1,10 +1,7 @@
 import { useSession } from "@/libs/context/AuthContext";
 import getRedirectURI from "@/libs/platforms/redirectURI";
-import { getVerifier, setVerifier } from "@/libs/platforms/verifierStorage";
-import { handleSpotifyLogin } from "@/libs/Spotify/SpotifyAuth";
-import { getStorageItemAsync } from "@/libs/storage/secureStorage";
+import { getVerifier } from "@/libs/platforms/verifierStorage";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { getItemAsync } from "expo-secure-store";
 import { useEffect } from "react";
 import { Text } from "react-native";
 
