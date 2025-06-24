@@ -12,10 +12,6 @@ WebBrowser.maybeCompleteAuthSession();
 export default function Index() {
   const { signIn, session, isLoading, setSession } = useSession();
   const router = useRouter();
-  useEffect(() => {
-    if (Platform.OS === "web" && document.location.host != "127.0.0.1:8081")
-      document.location.href = "http://127.0.0.1:8081";
-  });
   console.log("SESSION = " + session);
   console.log("Index entry in app/index.tsx");
   return (
@@ -42,19 +38,12 @@ export default function Index() {
             code_verifier: codeAndVerify.verifier,
           });
 
-          const params = new URLSearchParams();
-          params.append("client_id", "05d1e04eac8145b1aafaca023082c621");
-          params.append("grant_type", "authorization_code");
-          params.append("code", codeAndVerify.code);
-          params.append("redirect_uri", getRedirectURI());
-          params.append("code_verifier", codeAndVerify.verifier);
-
           console.log("sending token request");
           console.log(body.toString());
           const res = await fetch("https://accounts.spotify.com/api/token", {
             method: "POST",
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: params,
+            body: body.toString(),
           });
 
           const tokenData = await res.json();
