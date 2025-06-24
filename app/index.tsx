@@ -6,6 +6,7 @@ import { handleSpotifyLogin } from "../libs/Spotify/SpotifyAuth";
 import getRedirectURI from "@/libs/platforms/redirectURI";
 import { useEffect } from "react";
 import { Platform } from "react-native";
+import { exchangeCodeAsync } from "expo-auth-session";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -30,6 +31,22 @@ export default function Index() {
         onPress={async () => {
           let codeAndVerify = await handleSpotifyLogin(getRedirectURI());
           if (!codeAndVerify) return;
+          const tokenResponse = await exchangeCodeAsync(
+            {
+              clientId: "05d1e04eac8145b1aafaca023082c621",
+              code: codeAndVerify.code, // depuis promptAsync
+              redirectUri: getRedirectURI(),
+              clientSecret: process.env.EXPO_PUBLIC_CLIENT_SECRET,
+              extraParams: {
+                code_verifier: codeAndVerify.verifier,
+              },
+            },
+            {
+              tokenEndpoint: "https://accounts.spotify.com/api/token",
+            },
+          );
+          console.log(tokenResponse);
+          /*
           const body = new URLSearchParams({
             client_id: "05d1e04eac8145b1aafaca023082c621",
             grant_type: "authorization_code",
@@ -56,6 +73,8 @@ export default function Index() {
           } else {
             //router.replace("/+not-found");
           }
+        }
+         */
         }}
       />
       {

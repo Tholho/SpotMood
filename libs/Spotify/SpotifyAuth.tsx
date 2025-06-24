@@ -23,18 +23,21 @@ export async function handleSpotifyLogin(redirectUri: string) {
     codeChallenge: challenge,
     codeChallengeMethod: CodeChallengeMethod.S256,
     usePKCE: true,
+    clientSecret: process.env.EXPO_PUBLIC_CLIENT_SECRET,
   });
+  request.codeVerifier = verifier;
 
   const result = await request.promptAsync(discovery);
 
   if (result.type === "success") {
-    console.log("RESPONSE SUCCESS");
+    const code = result.params.code;
+    console.log("RESPONSE SUCCESS, with code:" + code);
     const verifier = await getVerifier();
     if (!verifier) {
       throw "Could not get verifier";
     }
     return {
-      code: result.params.code,
+      code: code,
       verifier: verifier,
     };
   }
