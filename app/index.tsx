@@ -30,27 +30,7 @@ export default function Index() {
         title="Login"
         onPress={async () => {
           let codeAndVerify = await handleSpotifyLogin(getRedirectURI());
-          if (!codeAndVerify) return;
-          /*const tokenResponse = await exchangeCodeAsync(
-            {
-              clientId: "05d1e04eac8145b1aafaca023082c621",
-              code: codeAndVerify.code,
-              redirectUri: getRedirectURI(),
-              //clientSecret: process.env.EXPO_PUBLIC_CLIENT_SECRET,
-              extraParams: {
-                code_verifier:
-                  codeAndVerify.verifier === codeAndVerify.request.codeVerifier
-                    ? codeAndVerify.verifier
-                    : "LAPIN : verifier issue",
-              },
-            },
-            {
-              tokenEndpoint: "https://accounts.spotify.com/api/token",
-            },
-          );
-          console.log(tokenResponse);
-          */
-
+          if (!codeAndVerify?.verifier) return;
           const body = new URLSearchParams({
             client_id: "05d1e04eac8145b1aafaca023082c621",
             grant_type: "authorization_code",
@@ -68,14 +48,12 @@ export default function Index() {
           });
 
           const tokenData = await res.json();
-          console.log("TOKEN = " + tokenData);
           if (tokenData.access_token) {
             setSession({
               accessToken: tokenData.access_token,
             });
             router.replace("/home");
           } else {
-            //router.replace("/+not-found");
           }
         }}
       />
