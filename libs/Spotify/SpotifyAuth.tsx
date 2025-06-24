@@ -23,7 +23,7 @@ export async function handleSpotifyLogin(redirectUri: string) {
     codeChallenge: challenge,
     codeChallengeMethod: CodeChallengeMethod.S256,
     usePKCE: true,
-    clientSecret: process.env.EXPO_PUBLIC_CLIENT_SECRET,
+    //clientSecret: process.env.EXPO_PUBLIC_CLIENT_SECRET,
   });
   request.codeVerifier = verifier;
 

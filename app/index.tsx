@@ -36,7 +36,7 @@ export default function Index() {
               clientId: "05d1e04eac8145b1aafaca023082c621",
               code: codeAndVerify.code, // depuis promptAsync
               redirectUri: getRedirectURI(),
-              clientSecret: process.env.EXPO_PUBLIC_CLIENT_SECRET,
+              //clientSecret: process.env.EXPO_PUBLIC_CLIENT_SECRET,
               extraParams: {
                 code_verifier: codeAndVerify.verifier,
               },
