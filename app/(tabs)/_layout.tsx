@@ -1,7 +1,6 @@
 import { Tabs, useRouter } from "expo-router";
 import { useEffect } from "react";
 import { useSession } from "../../libs/context/AuthContext";
-//import MockSpotifyAuth from "../Spotify/mockSpotifyAuth";
 
 export default function LoggedLayout() {
   const router = useRouter();

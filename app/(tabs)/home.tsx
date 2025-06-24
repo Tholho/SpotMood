@@ -2,7 +2,6 @@ import { Text, View, StyleSheet, Pressable } from "react-native";
 import { Link, useRouter } from "expo-router";
 import { useSession } from "../../libs/context/AuthContext";
 import { useEffect } from "react";
-//import MockSpotifyAuth from "../Spotify/mockSpotifyAuth";
 
 export default function Index() {
   console.log("Home entry in app/(tabs)/home.tsx");

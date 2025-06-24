@@ -1,18 +1,19 @@
 import * as Crypto from "expo-crypto";
 import { AuthRequest, CodeChallengeMethod } from "expo-auth-session";
-import { setVerifier } from "../platforms/verifierStorage";
+import { getVerifier, setVerifier } from "../platforms/verifierStorage";
 import getRedirectURI from "../platforms/redirectURI";
 
-export async function handleSpotifyLogin(redirectUri) {
+export async function handleSpotifyLogin(redirectUri: string) {
   const discovery = {
     authorizationEndpoint: "https://accounts.spotify.com/authorize",
     tokenEndpoint: "https://accounts.spotify.com/api/token",
   };
-  const verifier = generateVerifier(128);
+  const verifier = generateVerifier(64);
   console.log("VERIFIER =" + verifier);
-  const challenge = await generateChallenge(verifier);
-  console.log(challenge);
   await setVerifier(verifier);
+
+  const challenge = await generateChallenge(verifier);
+  console.log("challenge =" + challenge);
 
   const request = new AuthRequest({
     clientId: "05d1e04eac8145b1aafaca023082c621",
@@ -21,16 +22,20 @@ export async function handleSpotifyLogin(redirectUri) {
     responseType: "code",
     codeChallenge: challenge,
     codeChallengeMethod: CodeChallengeMethod.S256,
+    usePKCE: true,
   });
 
   const result = await request.promptAsync(discovery);
 
   if (result.type === "success") {
     console.log("RESPONSE SUCCESS");
-
+    const verifier = await getVerifier();
+    if (!verifier) {
+      throw "Could not get verifier";
+    }
     return {
       code: result.params.code,
-      verifier,
+      verifier: verifier,
     };
   }
 
@@ -39,16 +44,15 @@ export async function handleSpotifyLogin(redirectUri) {
 
 export function generateVerifier(length = 128) {
   const chars =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
   let out = "";
   for (let i = 0; i < length; i++) {
     out += chars.charAt(Math.floor(Math.random() * chars.length));
   }
-  console.log("");
   return out;
 }
 
-export async function generateChallenge(verifier) {
+export async function generateChallenge(verifier: string) {
   const digest = await Crypto.digestStringAsync(
     Crypto.CryptoDigestAlgorithm.SHA256,
     verifier,
@@ -56,6 +60,5 @@ export async function generateChallenge(verifier) {
       encoding: Crypto.CryptoEncoding.BASE64,
     },
   );
-  console.log("DIGEST 1 =" + digest);
   return digest.replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
 }

@@ -8,6 +8,7 @@ import { getItemAsync } from "expo-secure-store";
 import { useEffect } from "react";
 import { Text } from "react-native";
 
+//this code is now useless, kept for reference
 export default function SpotifyCallback() {
   const { session, setSession } = useSession();
   const { code } = useLocalSearchParams<{ code: string }>();
@@ -20,8 +21,8 @@ export default function SpotifyCallback() {
   console.log("entering callback...");
   console.log("SESSION = " + session);
   console.log("CODE = " + code);
-  const clientSecret = process.env.EXPO_PUBLIC_CLIENT_SECRET;
-  console.log("secret = " + clientSecret);
+  //const clientSecret = process.env.EXPO_PUBLIC_CLIENT_SECRET;
+  //console.log("secret = " + clientSecret);
   useEffect(() => {
     console.log("useEffect déclenché avec code =", code);
     async function exchangeCodeForToken() {
@@ -52,9 +53,9 @@ export default function SpotifyCallback() {
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: body.toString(),
       });
-
+      console.log("body =" + body);
       const tokenData = await res.json();
-      console.log("TOKEN = " + tokenData);
+      console.log("TOKEN = " + tokenData.access_token);
       if (tokenData.access_token) {
         setSession({
           accessToken: tokenData.access_token,

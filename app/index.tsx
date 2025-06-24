@@ -1,17 +1,9 @@
-import {
-  Text,
-  View,
-  StyleSheet,
-  Pressable,
-  Button,
-  Platform,
-} from "react-native";
+import { Text, View, StyleSheet, Pressable, Button } from "react-native";
 import { useRouter } from "expo-router";
 import { useSession } from "../libs/context/AuthContext";
 import * as WebBrowser from "expo-web-browser";
 //import SpotifyLogin from "./Spotify/mockSpotifyAuth";
 import { handleSpotifyLogin } from "../libs/Spotify/SpotifyAuth";
-import { makeRedirectUri } from "expo-auth-session";
 import getRedirectURI from "@/libs/platforms/redirectURI";
 
 WebBrowser.maybeCompleteAuthSession();
@@ -20,24 +12,6 @@ export default function Index() {
   const { signIn, session, isLoading, setSession } = useSession();
   const router = useRouter();
   console.log("SESSION = " + session);
-  //verify token validity and navigate to identified pages, mock atm
-  /*
-  useEffect(() => {
-    if (isLoading) return;
-    let token = "";
-    if (typeof session === "string" && session) {
-      token = session;
-    } else if (typeof session === "object") {
-      if (session?.accessToken) {
-        token = session.accessToken;
-      }
-    }
-    if (token) {
-      console.log(token);
-      router.replace("/home");
-    }
-  }, [session, isLoading]);
- */
   console.log("Index entry in app/index.tsx");
   return (
     <View style={styles.container}>
@@ -62,12 +36,20 @@ export default function Index() {
             redirect_uri: getRedirectURI(),
             code_verifier: codeAndVerify.verifier,
           });
+
+          const params = new URLSearchParams();
+          params.append("client_id", "05d1e04eac8145b1aafaca023082c621");
+          params.append("grant_type", "authorization_code");
+          params.append("code", codeAndVerify.code);
+          params.append("redirect_uri", getRedirectURI());
+          params.append("code_verifier", codeAndVerify.verifier);
+
           console.log("sending token request");
           console.log(body.toString());
           const res = await fetch("https://accounts.spotify.com/api/token", {
             method: "POST",
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: body.toString(),
+            body: params,
           });
 
           const tokenData = await res.json();
