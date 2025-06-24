@@ -10,7 +10,9 @@ export async function handleSpotifyLogin(redirectUri: string) {
   };
   const verifier = generateVerifier(64);
   console.log("VERIFIER =" + verifier);
-  await setVerifier(verifier);
+  await setVerifier(
+    "yLRyxFID6rOcpBMizRwxMf8_bLYke9-A2OTk60LqAblvpNQYSa7n-ux8h3LaL3hZN4FQjYQwvk6hBBJC-tj3DF-B5YMtF98ioCbmWgdMZAHS4w7hLYpQpz3Lb0pITbzz",
+  );
 
   const challenge = await generateChallenge(verifier);
   console.log("challenge =" + challenge);
@@ -20,15 +22,15 @@ export async function handleSpotifyLogin(redirectUri: string) {
     scopes: ["user-read-private"],
     redirectUri: getRedirectURI(),
     responseType: "code",
-    codeChallenge: challenge,
     codeChallengeMethod: CodeChallengeMethod.S256,
     usePKCE: true,
+    //codeVerifier: verifier,
     //clientSecret: process.env.EXPO_PUBLIC_CLIENT_SECRET,
   });
-  request.codeVerifier = verifier;
-
+  //request.codeVerifier = verifier;
   const result = await request.promptAsync(discovery);
-
+  //const url = await request.makeAuthUrlAsync(discovery);
+  //console.log("URL = " + url);
   if (result.type === "success") {
     const code = result.params.code;
     console.log("RESPONSE SUCCESS, with code:" + code);
@@ -38,7 +40,7 @@ export async function handleSpotifyLogin(redirectUri: string) {
     }
     return {
       code: code,
-      verifier: verifier,
+      verifier: request.codeVerifier,
     };
   }
 

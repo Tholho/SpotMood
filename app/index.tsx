@@ -31,14 +31,17 @@ export default function Index() {
         onPress={async () => {
           let codeAndVerify = await handleSpotifyLogin(getRedirectURI());
           if (!codeAndVerify) return;
-          const tokenResponse = await exchangeCodeAsync(
+          /*const tokenResponse = await exchangeCodeAsync(
             {
               clientId: "05d1e04eac8145b1aafaca023082c621",
-              code: codeAndVerify.code, // depuis promptAsync
+              code: codeAndVerify.code,
               redirectUri: getRedirectURI(),
               //clientSecret: process.env.EXPO_PUBLIC_CLIENT_SECRET,
               extraParams: {
-                code_verifier: codeAndVerify.verifier,
+                code_verifier:
+                  codeAndVerify.verifier === codeAndVerify.request.codeVerifier
+                    ? codeAndVerify.verifier
+                    : "LAPIN : verifier issue",
               },
             },
             {
@@ -46,7 +49,8 @@ export default function Index() {
             },
           );
           console.log(tokenResponse);
-          /*
+          */
+
           const body = new URLSearchParams({
             client_id: "05d1e04eac8145b1aafaca023082c621",
             grant_type: "authorization_code",
@@ -73,8 +77,6 @@ export default function Index() {
           } else {
             //router.replace("/+not-found");
           }
-        }
-         */
         }}
       />
       {
