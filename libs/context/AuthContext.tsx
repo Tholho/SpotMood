@@ -1,4 +1,4 @@
-import { use, createContext, type PropsWithChildren } from "react";
+import { use, createContext, type PropsWithChildren, useState } from "react";
 import { useStorageState } from "../storage/secureStorage";
 
 export type AuthTokens = {
@@ -13,6 +13,8 @@ const AuthContext = createContext<{
   setSession: (tokens: AuthTokens | null) => void;
   session: AuthTokens | string | null;
   isLoading: boolean;
+  userID: string | null;
+  setUserID: (arg0: string) => void;
 }>({
   signIn: () => null,
   signOut: () => null,
@@ -23,6 +25,8 @@ const AuthContext = createContext<{
     //  expiresIn: null,
   },
   isLoading: false,
+  userID: null,
+  setUserID: () => null,
 });
 
 // This hook can be used to access the user info.
@@ -38,14 +42,20 @@ export function useSession() {
 export function SessionProvider({ children }: PropsWithChildren) {
   const [[isLoading, session], setSession] =
     useStorageState<AuthTokens>("session");
+  const [[, userID], setUserID] = useStorageState<string>("userID");
   return (
     <AuthContext
       value={{
         signIn: () => {},
-        signOut: () => setSession(null),
+        signOut: () => {
+          setSession(null);
+          setUserID(null);
+        },
         setSession,
         session,
         isLoading,
+        userID,
+        setUserID,
       }}
     >
       {children}

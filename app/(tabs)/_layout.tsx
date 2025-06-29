@@ -22,6 +22,7 @@ export default function LoggedLayout() {
       }}
     >
       <Tabs.Screen name="home" options={{ title: "Home" }} />
+      <Tabs.Screen name="playlists" options={{ title: "Playlists" }} />
       <Tabs.Screen name="about" options={{ title: "About" }} />
     </Tabs>
   );

@@ -11,7 +11,7 @@ export async function handleSpotifyLogin(redirectUri: string) {
 
   const request = new AuthRequest({
     clientId: "05d1e04eac8145b1aafaca023082c621",
-    scopes: ["user-read-private"],
+    scopes: ["user-read-private playlist-read-private"],
     redirectUri: getRedirectURI(),
     responseType: "code",
     codeChallengeMethod: CodeChallengeMethod.S256,
@@ -20,7 +20,6 @@ export async function handleSpotifyLogin(redirectUri: string) {
   const result = await request.promptAsync(discovery);
   if (result.type === "success") {
     const code = result.params.code;
-    console.log("RESPONSE SUCCESS, with code:" + code);
     return {
       code: code,
       verifier: request.codeVerifier,

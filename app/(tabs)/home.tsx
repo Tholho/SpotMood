@@ -1,51 +1,46 @@
 import { Text, View, StyleSheet, Pressable } from "react-native";
 import { Link, useRouter } from "expo-router";
-import { useSession } from "../../libs/context/AuthContext";
+import { AuthTokens, useSession } from "../../libs/context/AuthContext";
 import { useEffect } from "react";
+//import getUserID from "@/libs/Spotify/apiCalls/getUserID";
+import getPlaylists from "@/libs/Spotify/apiCalls/getPlaylists";
+import getAccessToken from "@/libs/context/getAccessToken";
 
 export default function Index() {
   console.log("Home entry in app/(tabs)/home.tsx");
   const router = useRouter();
-  const { session, signOut, isLoading } = useSession();
+  const { session, signOut, isLoading, setUserID } = useSession();
   useEffect(() => {
     if (isLoading) return;
     if (session == null) {
       router.replace("/");
     }
   }, [session, isLoading]);
-  let token = "";
-  if (typeof session === "string") {
-    token = session;
-  } else if (typeof session === "object") {
-    if (session?.accessToken) {
-      token = session.accessToken;
-    }
-  }
+  const token = getAccessToken(session);
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>APP/(TABS)/INDEX.TSX</Text>
-      <Text style={styles.text}>
-        This should display if OAuth Access Token is valid
-      </Text>
-      <Text style={styles.text}>Token == TBD</Text>
       <Pressable style={styles.button}>
         <Text
           style={styles.buttonText}
           onPress={() => {
-            console.log(
-              "signout pressed.. need to figure out why app is sometimes unresponsive (this does not always print on press)",
-            );
             signOut();
           }}
         >
-          Logout button (Should clear session from storage, redirection logic
-          should happen from state/storage
+          Logout
         </Text>
       </Pressable>
-      <Text style={styles.text}>session.accessToken == {token}</Text>
-      <Link style={styles.button} href="/about" asChild>
-        <Pressable>
-          <Text style={styles.buttonText}>Link to APP/(TABS)/ABOUT.TSX</Text>
+      <Link style={styles.button} href="/playlists" asChild>
+        <Pressable
+          onPress={async () => {
+            //  const playlists = await getPlaylists(token, 0);
+            //  if (playlists) {
+            router.replace("/playlists");
+            //  } else {
+            //    console.log("no playlists???");
+            //  }
+          }}
+        >
+          <Text style={styles.buttonText}>See existing playlists</Text>
         </Pressable>
       </Link>
     </View>

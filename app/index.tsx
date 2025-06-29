@@ -24,15 +24,6 @@ export default function Index() {
     </View>
   ) : (
     <View style={styles.container}>
-      <Text style={styles.text}>APP/INDEX.TSX</Text>
-      <Text style={styles.text}>
-        This should display in the absence of OAuth Access Token
-      </Text>
-      <Text style={styles.text}>Token == TBD</Text>
-
-      <Pressable style={styles.button} onPress={() => router.replace("/")}>
-        <Text style={styles.buttonText}>Link to mockSpotifyAuth WIP</Text>
-      </Pressable>
       <Button
         title="Login"
         onPress={async () => {
@@ -45,9 +36,6 @@ export default function Index() {
             redirect_uri: getRedirectURI(),
             code_verifier: codeAndVerify.verifier,
           });
-
-          console.log("sending token request");
-          console.log(body.toString());
           const res = await fetch("https://accounts.spotify.com/api/token", {
             method: "POST",
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
