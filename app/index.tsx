@@ -13,9 +13,16 @@ WebBrowser.maybeCompleteAuthSession();
 export default function Index() {
   const { signIn, session, isLoading, setSession } = useSession();
   const router = useRouter();
+  if (session) {
+    router.replace("/home");
+  }
   console.log("SESSION = " + session);
   console.log("Index entry in app/index.tsx");
-  return (
+  return session || isLoading ? (
+    <View style={styles.container}>
+      <Text style={styles.text}>Loading</Text>
+    </View>
+  ) : (
     <View style={styles.container}>
       <Text style={styles.text}>APP/INDEX.TSX</Text>
       <Text style={styles.text}>
