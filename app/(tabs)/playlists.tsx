@@ -1,16 +1,26 @@
 import { useSession } from "@/libs/context/AuthContext";
 import getAccessToken from "@/libs/context/getAccessToken";
 import { useState, useEffect } from "react";
-import { View, Text, FlatList, ActivityIndicator } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
+import {
+  View,
+  Text,
+  FlatList,
+  ActivityIndicator,
+  Pressable,
+  StyleSheet,
+} from "react-native";
+import ListItem from "@/libs/components/ListItem";
 
-type Playlist = {
+type PlaylistItem = {
   id: string;
   name: string;
 };
 
+//Need to manage error 401 flow
 export default function Playlists() {
   const { session } = useSession();
-  const [playlists, setPlaylists] = useState<Playlist[]>([]);
+  const [playlists, setPlaylists] = useState<PlaylistItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [offset, setOffset] = useState(0);
@@ -55,12 +65,26 @@ export default function Playlists() {
   };
 
   return (
-    <View>
+    <View style={styles.page}>
+      <LinearGradient
+        colors={["#0b0024", "#210466"]}
+        start={{
+          x: 0,
+          y: 0.5,
+        }}
+        end={{
+          x: 1,
+          y: 1,
+        }}
+        style={styles.page}
+      />
       <Text>Existing Playlists</Text>
       <FlatList
+        style={styles.list}
         data={playlists}
         keyExtractor={(item) => item.id}
-        renderItem={({ item }) => <Text>{item.name}</Text>}
+        renderItem={({ item }) => <ListItem item={item} />}
+        ItemSeparatorComponent={() => <View style={styles.separator} />}
         onEndReached={() => {
           fetchPlaylists();
         }}
@@ -69,4 +93,28 @@ export default function Playlists() {
       />
     </View>
   );
+}
+
+const styles = StyleSheet.create({
+  page: {
+    position: "absolute",
+    width: "100%",
+    height: "100%",
+    zIndex: -1,
+  },
+  list: {
+    marginLeft: 5,
+  },
+  separator: {
+    height: 3,
+    backgroundColor: "#fff",
+    marginHorizontal: 15,
+    borderRadius: 15,
+    maxWidth: "50%",
+    opacity: 0.5,
+  },
+});
+
+function PlayListItem(item: PlaylistItem) {
+  return <Pressable></Pressable>;
 }
