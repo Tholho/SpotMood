@@ -17,7 +17,7 @@ export default function RootLayout() {
 
 function RootNavigator() {
   return (
-    <Stack>
+    <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="index" options={{ headerShown: false }} />
     </Stack>
   );
