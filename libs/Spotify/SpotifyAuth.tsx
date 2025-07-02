@@ -11,7 +11,7 @@ export async function handleSpotifyLogin(redirectUri: string) {
 
   const request = new AuthRequest({
     clientId: "05d1e04eac8145b1aafaca023082c621",
-    scopes: ["user-read-private playlist-read-private"],
+    scopes: ["user-read-private playlist-read-private user-library-read"],
     redirectUri: getRedirectURI(),
     responseType: "code",
     codeChallengeMethod: CodeChallengeMethod.S256,

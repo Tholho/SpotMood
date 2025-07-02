@@ -11,6 +11,14 @@ import {
   StyleSheet,
 } from "react-native";
 import ListItem from "@/libs/components/ListItem";
+import { AuthTokens } from "@/libs/context/AuthContext";
+import { useRouter } from "expo-router";
+import Lists from "@/libs/Spotify/components/Lists";
+
+type Error = {
+  status: string;
+  message: string;
+};
 
 type PlaylistItem = {
   id: string;
@@ -19,51 +27,6 @@ type PlaylistItem = {
 
 //Need to manage error 401 flow
 export default function Playlists() {
-  const { session } = useSession();
-  const [playlists, setPlaylists] = useState<PlaylistItem[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [hasMore, setHasMore] = useState(true);
-  const [offset, setOffset] = useState(0);
-  const limit = 20;
-
-  useEffect(() => {
-    if (!session) return;
-    fetchPlaylists();
-  }, [session]);
-
-  const fetchPlaylists = async () => {
-    const token = getAccessToken(session);
-    if (!token || loading || !hasMore) return;
-
-    setLoading(true);
-    try {
-      const params = new URLSearchParams({
-        limit: limit.toString(),
-        offset: offset.toString(),
-      });
-      const response = await fetch(
-        `https://api.spotify.com/v1/me/playlists?${params.toString()}`,
-        {
-          method: "GET",
-          headers: { Authorization: "Bearer " + token },
-        },
-      );
-      const data = await response.json();
-      if (
-        data.items.length === 0 ||
-        playlists.length + data.items.length >= data.total
-      ) {
-        setHasMore(false);
-      }
-      setPlaylists((prev) => [...prev, ...data.items]);
-      setOffset((prev) => prev + limit);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
     <View style={styles.page}>
       <LinearGradient
@@ -78,19 +41,8 @@ export default function Playlists() {
         }}
         style={styles.page}
       />
-      <Text>Existing Playlists</Text>
-      <FlatList
-        style={styles.list}
-        data={playlists}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => <ListItem item={item} />}
-        ItemSeparatorComponent={() => <View style={styles.separator} />}
-        onEndReached={() => {
-          fetchPlaylists();
-        }}
-        onEndReachedThreshold={0.5}
-        ListFooterComponent={loading ? <ActivityIndicator /> : null}
-      />
+      <Text style={styles.text}>Existing Playlists</Text>
+      <Lists target="playlists" />
     </View>
   );
 }
@@ -102,19 +54,7 @@ const styles = StyleSheet.create({
     height: "100%",
     zIndex: -1,
   },
-  list: {
-    marginLeft: 5,
-  },
-  separator: {
-    height: 3,
-    backgroundColor: "#fff",
-    marginHorizontal: 15,
-    borderRadius: 15,
-    maxWidth: "50%",
-    opacity: 0.5,
+  text: {
+    color: "#ffffff",
   },
 });
-
-function PlayListItem(item: PlaylistItem) {
-  return <Pressable></Pressable>;
-}
