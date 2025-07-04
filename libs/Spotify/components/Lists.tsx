@@ -5,40 +5,13 @@ import { useRouter } from "expo-router";
 import ListItem from "@/libs/components/ListItem";
 import { FlatList, StyleSheet, View, ActivityIndicator } from "react-native";
 import { fetchSpotifyResource } from "../apiCalls/fetchSpotifyResource";
-
-type TargetType = "playlists" | "tracks";
-
-type ListItemType = {
-  id: string;
-  name: string;
-};
-
-type SpotifyPlaylist = {
-  id: string;
-  name: string;
-};
-
-type SpotifyTrackItem = {
-  track: {
-    id: string;
-    name: string;
-  };
-};
-
-type SpotifyPlaylistsResponse = {
-  items: SpotifyPlaylist[];
-  total: number;
-};
-
-type SpotifyTracksResponse = {
-  items: SpotifyTrackItem[];
-  total: number;
-};
-
-type SpotifyAPIResponseMap = {
-  playlists: SpotifyPlaylistsResponse;
-  tracks: SpotifyTracksResponse;
-};
+import {
+  TargetType,
+  ListItemType,
+  SpotifyAPIResponseMap,
+  SpotifyTracksResponse,
+  SpotifyPlaylistsResponse,
+} from "../types";
 
 function isTrackTarget(target: TargetType): target is "tracks" {
   return target === "tracks";

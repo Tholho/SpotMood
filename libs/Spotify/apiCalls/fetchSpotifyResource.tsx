@@ -1,34 +1,6 @@
 import { AuthTokens } from "@/libs/context/AuthContext";
 import getAccessToken from "@/libs/context/getAccessToken";
-
-type TargetType = "playlists" | "tracks";
-
-type SpotifyPlaylist = {
-  id: string;
-  name: string;
-};
-
-type SpotifyTrackItem = {
-  track: {
-    id: string;
-    name: string;
-  };
-};
-
-type SpotifyPlaylistsResponse = {
-  items: SpotifyPlaylist[];
-  total: number;
-};
-
-type SpotifyTracksResponse = {
-  items: SpotifyTrackItem[];
-  total: number;
-};
-
-type SpotifyAPIResponseMap = {
-  playlists: SpotifyPlaylistsResponse;
-  tracks: SpotifyTracksResponse;
-};
+import { TargetType, SpotifyAPIResponseMap } from "../types";
 
 export async function fetchSpotifyResource<T extends TargetType>(
   session: string | AuthTokens | null,
