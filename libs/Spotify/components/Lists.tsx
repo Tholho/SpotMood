@@ -4,6 +4,7 @@ import getAccessToken from "@/libs/context/getAccessToken";
 import { useRouter } from "expo-router";
 import ListItem from "@/libs/components/ListItem";
 import { FlatList, StyleSheet, View, ActivityIndicator } from "react-native";
+import { fetchSpotifyResource } from "../apiCalls/fetchSpotifyResource";
 
 type TargetType = "playlists" | "tracks";
 
@@ -66,20 +67,9 @@ export default function Lists({ target }: { target: TargetType }) {
 
     setLoading(true);
     try {
-      const params = new URLSearchParams({
-        limit: limit.toString(),
-        offset: offset.toString(),
-      });
+      const response = fetchSpotifyResource(session, target, offset, limit);
 
-      const response = await fetch(
-        `https://api.spotify.com/v1/me/${target}?${params.toString()}`,
-        {
-          method: "GET",
-          headers: { Authorization: "Bearer " + token },
-        },
-      );
-
-      const data: SpotifyAPIResponseMap[T] = await response.json();
+      const data: SpotifyAPIResponseMap[T] = await response;
 
       let normalizedItems: ListItemType[];
 
