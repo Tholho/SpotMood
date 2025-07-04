@@ -1,29 +1,6 @@
-import { useSession } from "@/libs/context/AuthContext";
-import getAccessToken from "@/libs/context/getAccessToken";
-import { useState, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
-import {
-  View,
-  Text,
-  FlatList,
-  ActivityIndicator,
-  Pressable,
-  StyleSheet,
-} from "react-native";
-import ListItem from "@/libs/components/ListItem";
-import { AuthTokens } from "@/libs/context/AuthContext";
-import { useRouter } from "expo-router";
+import { View, Text, StyleSheet } from "react-native";
 import Lists from "@/libs/Spotify/components/Lists";
-
-type Error = {
-  status: string;
-  message: string;
-};
-
-type PlaylistItem = {
-  id: string;
-  name: string;
-};
 
 //Need to manage error 401 flow
 export default function Playlists() {

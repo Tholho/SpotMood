@@ -1,23 +1,19 @@
 import { Text, View, StyleSheet, Pressable } from "react-native";
 import { Link, useRouter } from "expo-router";
-import { AuthTokens, useSession } from "../../libs/context/AuthContext";
+import { useSession } from "../../libs/context/AuthContext";
 import { useEffect } from "react";
-//import getUserID from "@/libs/Spotify/apiCalls/getUserID";
-import getPlaylists from "@/libs/Spotify/apiCalls/getPlaylists";
-import getAccessToken from "@/libs/context/getAccessToken";
 import { LinearGradient } from "expo-linear-gradient";
 
 export default function Index() {
   console.log("Home entry in app/(tabs)/home.tsx");
   const router = useRouter();
-  const { session, signOut, isLoading, setUserID } = useSession();
+  const { session, signOut, isLoading } = useSession();
   useEffect(() => {
     if (isLoading) return;
     if (session == null) {
       router.replace("/");
     }
-  }, [session, isLoading]);
-  const token = getAccessToken(session);
+  }, [session, isLoading, router]);
   return (
     <View style={styles.container}>
       <LinearGradient
