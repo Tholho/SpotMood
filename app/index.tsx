@@ -1,17 +1,14 @@
-import { Text, View, StyleSheet, Pressable, Button } from "react-native";
+import { Text, View, StyleSheet, Button } from "react-native";
 import { useRouter } from "expo-router";
 import { useSession } from "../libs/context/AuthContext";
 import * as WebBrowser from "expo-web-browser";
 import { handleSpotifyLogin } from "../libs/Spotify/SpotifyAuth";
 import getRedirectURI from "@/libs/platforms/redirectURI";
-import { useEffect } from "react";
-import { Platform } from "react-native";
-import { exchangeCodeAsync } from "expo-auth-session";
 
 WebBrowser.maybeCompleteAuthSession();
 
 export default function Index() {
-  const { signIn, session, isLoading, setSession } = useSession();
+  const { session, isLoading, setSession } = useSession();
   const router = useRouter();
   if (session) {
     router.replace("/home");
